@@ -81,12 +81,16 @@ export default function PersistentDrawerLeft() {
                         Flame Analytics Dashboard
                     </Typography>
                 </Paper>
-                <Paper elevation={3} sx={{mt:1}}>
-                        <Box sx={{p:3,display:'flex',justifyContent:'space-around',flexWrap:'wrap'}}>
-                            <Button variant='contained' sx={{px:4,mt:1}}>Upload</Button>
-                            <Button variant='contained' sx={{px:4,mt:1}}>Analyze Frame</Button>
-                            <Button variant='contained' sx={{px:4,mt:1}}>Analyze Video</Button>
-                        </Box>
+                <Paper elevation={3} sx={{ mt: 1 }}>
+                    <Box sx={{ p: 3, display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap' }}>
+                        <Button variant="contained" component="label" sx={{ px: 4, mt: 1 }} >
+                            Upload File
+                            <input type="file" hidden />
+                        </Button>
+                        <Button variant='contained' sx={{ px: 4, mt: 1 }}>Analyze Frame</Button>
+                        <Button variant='contained' sx={{ px: 4, mt: 1 }}>Analyze Video</Button>
+                    </Box>
+
                 </Paper>
             </AppBar>
             <Drawer
