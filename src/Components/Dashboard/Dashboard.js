@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
@@ -8,10 +8,12 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { Button, Grid, Paper } from "@mui/material";
+import { Button, Grid, Paper, useMediaQuery } from "@mui/material";
 import Drawerr from "./Drawer/Drawer";
 import { MenuOpen } from "@mui/icons-material";
 import Notifications from "./Notifications";
+import { useNavigate } from "react-router-dom";
+import Modall from "./Modal/Modal";
 
 
 const drawerWidth = 240;
@@ -38,22 +40,32 @@ const DrawerHeader = styled("div")(({ theme }) => ({
     ...theme.mixins.toolbar,
     justifyContent: "flex-end",
 }));
+
 export default function Dashboard() {
     const theme = useTheme();
-    const [open, setOpen] = React.useState(true);
+    const mdBreak = useMediaQuery(theme.breakpoints.up('lg'));
+    const [open, setOpen] = React.useState(false);
     const [file, setFile] = useState(null)
+    const videoRef = useRef();
     const handleDrawerOpen = () => {
-        setOpen(true);
-    };
+        setOpen(true)
+    }
     const handleDrawerClose = () => {
         setOpen(false);
     };
     const handleChange = (e) => {
-        setFile({
-            file: URL.createObjectURL(e.target.files[0])
-        },
-        )
+        setFile(URL.createObjectURL(e.target.files[0]))
+        videoRef.current?.load();
     }
+    useEffect(() => {
+        if (mdBreak) setOpen(mdBreak)
+    }, [mdBreak])
+    useEffect(() => {
+        setFile(file)
+    }, [file])
+    const navigate = useNavigate()
+
+
     return (
         <Box sx={{ display: "flex" }}>
             <CssBaseline />
@@ -69,74 +81,34 @@ export default function Dashboard() {
                         <MenuOpen sx={{ fontSize: '30px !important' }} />
                     </IconButton>
                     <Typography variant="h5" noWrap sx={{ fontWeight: 'bolder', pt: 1, px: 3 }} component="div">
-                        Flame Analytics Dashboard
+                        {mdBreak ? 'Flame Analytics Dashboard' : null}
                     </Typography>
-                    <Box sx={{ marginLeft: 'auto' }}>
-                        <Button variant="contained" component="label" sx={{ px: 5, mt: 1, mx: 2 }} >
+                    <Box sx={{ marginLeft: 'auto', display: 'flex' }}>
+                        <Button variant="contained" component="label" >
                             Upload File
                             <input type="file" hidden accept="video/*,.mkv" onChange={handleChange} />
                         </Button>
                         {
                             file !== null ?
-                                <Button variant='contained' sx={{ px: 4, mt: 1 }}>Analyse Frame</Button>
+                                    <Modall />
+                                /* <Button variant='contained' sx={{ px: 4, mt: 1 }} >Analyse Frame</Button> */
                                 :
                                 null
                         }
                     </Box>
 
                 </Paper>
-                {/* <Paper elevation={3} sx={{ margin:'10px',boxShadow:'5px 5px 10px' }}>
-                    <Box sx={{ p: 3, display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap' }}>
-                        <Button variant="contained" component="label" sx={{ px: 4, mt: 1 }} >
-                            Upload File
-                            <input type="file" hidden accept="video/*,.mkv" onChange={handleChange} />
-                        </Button>
-                        <Button variant='contained' sx={{ px: 4, mt: 1 }}>Analyze Frame</Button>
-                        <Button variant='contained' sx={{ px: 4, mt: 1 }}>Analyze Video</Button>
-                    </Box>
-                </Paper> */}
-                {/* <Grid container>
-                    <Grid item sm={12} md={6} lg={8}>
-                        <Paper sx={{ p: 2, boxShadow: '5px 5px 10px', margin: '10px' }}>
-                            {
-                                file !== null ?
-                                    <>
-                                        <video width="100%" height="300" controls autoPlay>
-                                            <source src={file.file} type="video/mp4" />
-                                        </video>
-                                    </>
-                                    :
-                                
-                                        null
-                                
-                            }
-                        </Paper>
-                    </Grid>
-                    <Grid item sm={4}>
-                        <Paper sx={{ p: 2, boxShadow: '5px 5px 10px', margin: '10px' }}>
-                            {
-                                file !== null ?
-                                    <>
-                                        <Notifications />
-                                    </>
-                                    :
-                                    <>
-                                        <Typography variant="h6" sx={{ textAlign: 'center' }}>No Notifications</Typography>
-                                    </>
-                            }
-                        </Paper>
-                    </Grid>
-
-                </Grid> */}
                 <Grid container>
                     {
                         file !== null ?
                             <>
                                 <Grid item sm={12} md={6} lg={8}>
                                     <Paper sx={{ p: 2, boxShadow: '5px 5px 10px', margin: '10px' }}>
-                                        <video width="100%" height="363 " controls autoPlay>
-                                            <source src={file.file} type="video/mp4" />
-                                        </video>
+                                        <>{console.log(file)}
+                                            <video width="100%" height="363 " ref={videoRef} controls autoPlay>
+                                                <source src={file} type="video/mp4" />
+                                            </video>
+                                        </>
                                     </Paper>
                                 </Grid>
                                 <Grid item sm={12} md={6} lg={4}>
@@ -149,7 +121,26 @@ export default function Dashboard() {
                             null
                     }
                 </Grid>
-
+                <Box>
+                    {
+                        file !== null ?
+                            <>
+                                <Paper elevation={3} sx={{ p: 2, margin: '10px',boxShadow: '5px 5px 10px' }}>
+                                    <Typography variant="h6">Segmentation Video</Typography>
+                                </Paper>
+                                <Paper elevation={3} sx={{ p: 2, margin: '10px',boxShadow: '5px 5px 10px' }}>
+                                    <Typography variant="h6">Heat Signature Video</Typography>
+                                </Paper>
+                                <Paper elevation={3} sx={{ p: 2, margin: '10px',boxShadow: '5px 5px 10px' }}>
+                                    <Typography variant="h6">Notification Summary</Typography>
+                                </Paper>
+                            </>
+                            :
+                            <>
+                                null
+                            </>
+                    }
+                </Box>
             </AppBar>
             <Drawer
                 sx={{
