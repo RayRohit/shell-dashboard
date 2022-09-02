@@ -12,7 +12,6 @@ import { Button, Grid, Paper, useMediaQuery } from "@mui/material";
 import Drawerr from "./Drawer/Drawer";
 import { MenuOpen } from "@mui/icons-material";
 import Notifications from "./Notifications";
-import { useNavigate } from "react-router-dom";
 import Modall from "./Modal/Modal";
 
 
@@ -63,7 +62,6 @@ export default function Dashboard() {
     useEffect(() => {
         setFile(file)
     }, [file])
-    const navigate = useNavigate()
 
 
     return (
@@ -83,15 +81,16 @@ export default function Dashboard() {
                     <Typography variant="h5" noWrap sx={{ fontWeight: 'bolder', pt: 1, px: 3 }} component="div">
                         {mdBreak ? 'Flame Analytics Dashboard' : null}
                     </Typography>
-                    <Box sx={{ marginLeft: 'auto', display: 'flex' }}>
-                        <Button variant="contained" component="label" >
+                    <Box sx={{ marginLeft:'auto' }}>
+                        <Button variant="contained" component="label" size="medium" sx={{px:3,mx:1}}>
                             Upload File
                             <input type="file" hidden accept="video/*,.mkv" onChange={handleChange} />
                         </Button>
                         {
                             file !== null ?
+                                <Button variant="contained" size="medium" sx={{px:3,mx:1}}>
                                     <Modall />
-                                /* <Button variant='contained' sx={{ px: 4, mt: 1 }} >Analyse Frame</Button> */
+                                </Button>
                                 :
                                 null
                         }
@@ -125,13 +124,13 @@ export default function Dashboard() {
                     {
                         file !== null ?
                             <>
-                                <Paper elevation={3} sx={{ p: 2, margin: '10px',boxShadow: '5px 5px 10px' }}>
+                                <Paper elevation={3} sx={{ p: 2, margin: '10px', boxShadow: '5px 5px 10px' }}>
                                     <Typography variant="h6">Segmentation Video</Typography>
                                 </Paper>
-                                <Paper elevation={3} sx={{ p: 2, margin: '10px',boxShadow: '5px 5px 10px' }}>
+                                <Paper elevation={3} sx={{ p: 2, margin: '10px', boxShadow: '5px 5px 10px' }}>
                                     <Typography variant="h6">Heat Signature Video</Typography>
                                 </Paper>
-                                <Paper elevation={3} sx={{ p: 2, margin: '10px',boxShadow: '5px 5px 10px' }}>
+                                <Paper elevation={3} sx={{ p: 2, margin: '10px', boxShadow: '5px 5px 10px' }}>
                                     <Typography variant="h6">Notification Summary</Typography>
                                 </Paper>
                             </>

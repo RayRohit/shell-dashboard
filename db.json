@@ -1,0 +1,9 @@
+{
+    "Users" : [
+        {
+            "id":1,
+            "email":"admin@navajna.com",
+            "password":"admin@1234"
+        }
+    ]
+}

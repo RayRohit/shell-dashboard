@@ -3,18 +3,12 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import MainModal from './Components/Dashboard/Modal/MainModal';
+// import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-  <BrowserRouter>
     <App />
-    <Routes>
-      <Route path='/modal' element={<MainModal />} />
-    </Routes>
-  </BrowserRouter>
   </React.StrictMode>
 );
 

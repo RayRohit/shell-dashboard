@@ -1,49 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import ListSubheader from '@mui/material/ListSubheader';
 import { Alert, Paper, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
 export default function Notifications() {
-    const[data,setData] = useState([])
-    useEffect(()=>{
+    const [data, setData] = useState([])
+    useEffect(() => {
         fetch('https://jsonplaceholder.typicode.com/posts')
-        .then((res)=>res.json())
-        .then((data)=>setData(data))
-    },[])
-    const sortedPosts = data.sort((a,b)=>{return(b.id - a.id)})
-    const AlertData = [
-        {
-            id: 1,
-            status: 'true'
-        },
-        {
-            id: 2,
-            status: 'false'
-        },
-        {
-            id: 3,
-            status: 'true'
-        },
-        {
-            id: 4,
-            status: 'false'
-        },
-        {
-            id: 5,
-            status: 'true'
-        },
-        {
-            id: 6,
-            status: 'false'
-        },
-    ]
-    const sortedData = AlertData.sort((a,b)=>{
-        return(b.id - a.id)
-    })
-    console.log(sortedData)
+            .then((res) => res.json())
+            .then((data) => setData(data))
+    }, [])
+    const sortedPosts = data.sort((a, b) => { return (b.id - a.id) })
     return (
         <>
             <Paper elevation={3} sx={{ my: 1 }}>
@@ -52,7 +19,7 @@ export default function Notifications() {
             <List
                 sx={{
                     width: '100%',
-                    maxWidth: 480,
+                    maxWidth: 500,
                     bgcolor: 'background.paper',
                     position: 'relative',
                     overflow: 'auto',
