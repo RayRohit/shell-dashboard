@@ -14,3 +14,14 @@ code {
 .css-ag7rrr-MuiTypography-root{
   font-weight: bolder;
 }
+.apexcharts-toolbar{
+
+  display: none !important;
+
+}
+.apexcharts-menu-icon, .apexcharts-toolbar-custom-icon {
+  display: none !important;
+}
+text{
+  fill: azure !important;
+}

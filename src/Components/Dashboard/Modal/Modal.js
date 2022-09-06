@@ -5,6 +5,10 @@ import Modal from "@mui/material/Modal";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { Heatmap } from "../../Heatmap/Heatmap";
 import heat from '../../Heatmap/HeatMap6.json'
+import original from '../../../Images/originalImage.png'
+import segment from '../../../Images/segmentImg.png'
+import CurveGraph from "../../Graphs/CurveGraph";
+
 
 export const style = {
     position: 'absolute',
@@ -26,21 +30,38 @@ export default function Modall() {
 
     const theme = useTheme()
     const md = useMediaQuery(theme.breakpoints.up('md'))
-    const sm = useMediaQuery(theme.breakpoints.up('sm'))
     const lg = useMediaQuery(theme.breakpoints.up('lg'))
+    const xl = useMediaQuery(theme.breakpoints.up('xl'))
 
-    let width = 600
+    let width = 900
     let height = 500
 
-    if (!sm && !md) {
-        width = 150
-        height = 150
-    }
-    else if (sm && !md) {
-        width = 300
+    if (!md && !lg && !xl) {
+        width = 450
         height = 300
     }
+    else if (md && !lg && !xl) {
+        width = 380
+        height = 300
+    }
+    else if (lg && !md && !xl) {
+        width = 600
+        height = 500
+    }
+    else if (!xl && lg && md) {
+        width = 570
+        height = 500
+    }
+    else if (xl && lg && md) {
+        width = 800
+        height = 500
+    }
+    let array = []
+    for (let i = 0; i < 50; i++)
+        array.push(
+            Math.ceil(Math.random() * i * 10)
 
+        );
 
     return (
         <div>
@@ -56,42 +77,70 @@ export default function Modall() {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <Paper elevation={0} sx={{ padding: '10px', display: 'flex', direction: 'row', justifyContent: 'flex-end' }}>
-                        <HighlightOffIcon
-                            onClick={() => {
-                                setOpen(false);
-                            }}
-                        />
-                    </Paper>
-                    {/* <Box sx={{position:'sticky'}}>
-                        <Paper elevation={3} sx={{ p: 2, margin: '10px', boxShadow: '5px 5px 10px', mb: 4 }}>
-                            <Typography variant="h4" >Analyse Frame</Typography>
-                        </Paper>
-                    </Box> */}
+
                     <Paper sx={{ p: 2, margin: '10px', boxShadow: '5px 5px 10px', mb: 2 }}>
-                        <Typography variant="h5">Analyse Frame</Typography>
+                        <Paper elevation={3} sx={{ margin: '0 18px', borderRadius: '20px' }}>
+                            <Paper sx={{ p: 3, width: '100%', borderRadius: '20px', display: 'flex', direction: 'row', justifyContent: 'space-between', backgroundColor: '' }}>
+                                <Typography variant="h4" sx={{ fontWeight: 'bold' }}>Frame Analysis</Typography>
+                                <HighlightOffIcon
+
+                                    onClick={() => {
+                                        setOpen(false);
+                                    }}
+                                />
+                            </Paper>
+                        </Paper>
+                        <Box>
+                            <Box>
+                                <Grid container spacing={2} sx={{ p: 2, mt: 1 }}>
+                                    <Grid item sm={12} md={6} lg={6}>
+                                        <Paper elevation={3} sx={{ p: 2, boxShadow: '5px 5px 10px', borderRadius: '20px', }}>
+                                            <Box >
+                                                <Typography variant="h5" sx={{ fontWeight: 'bold', px: 3, pt: 2 }} >Original Frame</Typography>
+                                                <Box sx={{ pt: 2, pl: 1 }}>
+                                                    <img src={original} alt='original frame' width={width} height={height} style={{ boxShadow: '3px 3px 6px', borderRadius: '20px', padding: '5px' }} />
+                                                </Box>
+                                            </Box>
+                                        </Paper>
+                                    </Grid>
+                                    <Grid item sm={12} md={6} lg={6} >
+                                        <Paper elevation={3} sx={{ p: 2, boxShadow: '5px 5px 10px', borderRadius: '20px' }}>
+                                            <Box sx={{ borderRadius: '20px' }}>
+                                                <Typography variant="h5" sx={{ fontWeight: 'bold', px: 3, pt: 2 }} >Heat Signature of The Frame</Typography>
+                                                <Box sx={{ textAlign: 'center', pt: 2 }}>
+                                                    <Heatmap data={heat} width={width} height={height} />
+                                                </Box>
+                                            </Box>
+                                        </Paper>
+                                    </Grid>
+                                </Grid>
+                            </Box>
+                            <Box>
+                                <Grid container spacing={2} sx={{ p: 2 }}>
+                                    <Grid item sm={12} md={6} lg={6}>
+                                        <Paper elevation={3} sx={{ p: 2, boxShadow: '5px 5px 10px', borderRadius: '20px' }}>
+                                            <Box sx={{ borderRadius: '20px' }}>
+                                                <Typography variant="h5" sx={{ fontWeight: 'bold', px: 3, pt: 2 }} >Segmented Frame</Typography>
+                                                <Box sx={{ pt: 2, pl: 1 }}>
+                                                    <img src={segment} alt='original fram' width={width} height={height} style={{ boxShadow: '3px 3px 6px', borderRadius: '20px', padding: '5px' }} />
+                                                </Box>
+                                            </Box>
+                                        </Paper>
+                                    </Grid>
+                                    <Grid item sm={12} md={6} lg={6} >
+                                        <Paper elevation={3} sx={{ p: 2, boxShadow: '5px 5px 10px', borderRadius: '20px' }}>
+                                            <Box sx={{ borderRadius: '20px' }}>
+                                                <Typography variant="h5" sx={{ fontWeight: 'bold', px: 3, pt: 2 }} >Prediction Curve</Typography>
+                                                <Box sx={{ textAlign: 'center', pt: 2 }}>
+                                                    <CurveGraph data={array} height={height} width={width} />
+                                                </Box>
+                                            </Box>
+                                        </Paper>
+                                    </Grid>
+                                </Grid>
+                            </Box>
+                        </Box>
                     </Paper>
-                    <Box>
-                        <Paper elevation={3} sx={{ p: 2, margin: '10px', boxShadow: '5px 5px 10px' }}>
-                            <Typography variant="h6" >Heat Signature Of The Frame</Typography>
-                            <Grid container spacing={2} sx={{ p: 2 }}>
-                                <Grid item sm={12} md={6} lg={6}>
-                                    hello
-                                </Grid>
-                                <Grid item sm={12} md={6} lg={6}>
-                                    <Paper elevation={3} sx={{ p: 2,display:'flex',justifyContent:'center',alignItems:'center',boxShadow:'5px 5px 10px' }}>
-                                        <Heatmap data={heat} width={width} height={height} />
-                                    </Paper>
-                                </Grid>
-                            </Grid>
-                        </Paper>
-                        <Paper elevation={3} sx={{ p: 2, margin: '10px', boxShadow: '5px 5px 10px' }}>
-                            <Typography variant="h6">Segmentation Of The Frame</Typography>
-                        </Paper>
-                        <Paper elevation={3} sx={{ p: 2, margin: '10px', boxShadow: '5px 5px 10px' }}>
-                            <Typography variant="h6">Prediction Curve</Typography>
-                        </Paper>
-                    </Box>
                 </Box>
             </Modal>
         </div>

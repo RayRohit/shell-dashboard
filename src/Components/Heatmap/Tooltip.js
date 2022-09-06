@@ -44,8 +44,8 @@ const TooltipRow = (props) => {
   return (
     <div>
       <div>
-        <b>{label}</b>
-        <span>: </span>
+        {/* <b>{label}</b> */}
+        {/* <span>: </span> */}
         <span>
           {value}&nbsp;<sup>0</sup>&nbsp;C
         </span>
