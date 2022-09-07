@@ -39,13 +39,35 @@ const DrawerHeader = styled("div")(({ theme }) => ({
     ...theme.mixins.toolbar,
     justifyContent: "flex-end",
 }));
+const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
+    ({ theme, open }) => ({
+        flexGrow: 1,
+        padding: theme.spacing(3),
+        transition: theme.transitions.create('margin', {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
+        marginLeft: `-${drawerWidth}px`,
+        ...(open && {
+            transition: theme.transitions.create('margin', {
+                easing: theme.transitions.easing.easeOut,
+                duration: theme.transitions.duration.enteringScreen,
+            }),
+            marginLeft: 0,
+        }),
+    }),
+);
 
 export default function Dashboard() {
     const theme = useTheme();
     const mdBreak = useMediaQuery(theme.breakpoints.up('lg'));
     const [open, setOpen] = React.useState(false);
     const [file, setFile] = useState(null)
+
+    const [videoAnalysis, setVideoAnalysis] = useState('none')
+
     const videoRef = useRef();
+    // const canvasRef = useRef()
     const handleDrawerOpen = () => {
         setOpen(true)
     }
@@ -62,9 +84,7 @@ export default function Dashboard() {
     useEffect(() => {
         setFile(file)
     }, [file])
-
-    console.log(video)
-
+    console.log(file)
 
     return (
         <Box sx={{ display: "flex" }}>
@@ -83,7 +103,7 @@ export default function Dashboard() {
                     <Typography variant="h5" noWrap sx={{ fontWeight: 'bolder', pt: 1, px: 3 }} component="div">
                         {mdBreak ? 'Flame Analytics Dashboard' : null}
                     </Typography>
-                    <Box sx={{ marginLeft: 'auto' }}>
+                    <div style={{ marginLeft: 'auto' }}>
                         <Button variant="contained" component="label" size="medium" sx={{ px: 3, mx: 1 }}>
                             Upload File
                             <input type="file" hidden accept="video/*,.mkv" onChange={handleChange} />
@@ -96,10 +116,10 @@ export default function Dashboard() {
                                 :
                                 null
                         }
-                    </Box>
+                    </div>
 
                 </Paper>
-                <Grid container>
+                {/* <Grid container>
                     {
                         file !== null ?
                             <>
@@ -117,16 +137,7 @@ export default function Dashboard() {
                                         <Notifications />
                                     </Paper>
                                 </Grid>
-                            </>
-                            :
-                            null
-                    }
-                </Grid>
-                <Box>
-                    {
-                        file !== null ?
-                            <>
-                                {/* <Grid container spacing={2} sx={{ p: 2, mt: 1 }}>
+                                <Grid container spacing={2} sx={{ p: 2, mt: 1 }}>
                                     <Grid item sm={12} md={6} lg={6}>
                                         <Paper elevation={3} sx={{ p: 2, boxShadow: '5px 5px 10px', borderRadius: '20px', }}>
                                             <Box >
@@ -148,18 +159,17 @@ export default function Dashboard() {
                                             </Box>
                                         </Paper>
                                     </Grid>
-                                </Grid> */}
-                                <Paper elevation={3} sx={{ p: 2, margin: '10px', boxShadow: '5px 5px 10px' }}>
-                                    <Typography variant="h5" sx={{ fontWeight: 'bolder' }}>Notification Summary</Typography>
-                                </Paper>
-                                
+                                    <Grid item sm={12}>
+                                        <Paper elevation={3} sx={{ p: 2, margin: '10px', boxShadow: '5px 5px 10px' }}>
+                                            <Typography variant="h5" sx={{ fontWeight: 'bolder' }}>Notification Summary</Typography>
+                                        </Paper>
+                                    </Grid>
+                                </Grid>
                             </>
                             :
-                            <>
-                                null
-                            </>
+                            null
                     }
-                </Box>
+                </Grid> */}
             </AppBar>
             <Drawer
                 sx={{
@@ -185,6 +195,113 @@ export default function Dashboard() {
                 </DrawerHeader>
                 <Drawerr />
             </Drawer>
+            <Main open={open} sx={{ pt: 15 }}>
+                <Grid container>
+                    {
+                        file !== null ?
+                            <>
+                                <Grid item sm={12} md={6} lg={8}>
+                                    <Paper sx={{ p: 2, boxShadow: '5px 5px 10px', margin: '10px' }}>
+                                        <>
+                                            <video width="100%" height="363 " ref={videoRef} onEnded={() => setVideoAnalysis('flex')} controls autoPlay>
+                                                <source src={file} type="video/mp4" />
+                                            </video>
+                                        </>
+                                    </Paper>
+                                </Grid>
+                                <Grid item sm={12} md={6} lg={4}>
+                                    <Paper sx={{ p: 2, boxShadow: '5px 5px 10px', margin: '10px' }}>
+                                        <Notifications />
+                                    </Paper>
+                                </Grid>
+                                <Grid container spacing={2} sx={{ p: 2, mt: 1, display: `${videoAnalysis}` }}>
+                                    <Grid item sm={12} md={6} lg={6}>
+                                        <Paper elevation={3} sx={{ p: 2, boxShadow: '5px 5px 10px', borderRadius: '20px', }}>
+                                            <Box >
+                                                <Typography variant="h5" sx={{ fontWeight: 'bolder' }}>Segmentation Video</Typography>
+                                                <Box sx={{ pt: 2, pl: 1 }}>
+                                                    <video width="100%" height="363"  controls autoPlay>
+                                                        <source src={video} type="video/mp4" />
+                                                    </video>
+                                                </Box>
+                                            </Box>
+                                        </Paper>
+                                    </Grid>
+                                    <Grid item sm={12} md={6} lg={6} >
+                                        <Paper elevation={3} sx={{ p: 2, boxShadow: '5px 5px 10px', borderRadius: '20px' }}>
+                                            <Box sx={{ borderRadius: '20px' }}>
+                                                <Typography variant="h5" sx={{ fontWeight: 'bold', px: 3, pt: 2 }} >Heat Signature of The Frame</Typography>
+                                                <Box sx={{ textAlign: 'center', pt: 2 }}>
+                                                    <video width="100%" height="363 "  controls autoPlay>
+                                                        <source src={file} type="video/mp4" />
+                                                    </video>
+                                                </Box>
+                                            </Box>
+                                        </Paper>
+                                    </Grid>
+                                    <Grid item sm={12}>
+                                        <Paper elevation={3} sx={{ p: 2, margin: '10px', boxShadow: '5px 5px 10px' }}>
+                                            <Typography variant="h5" sx={{ fontWeight: 'bolder' }}>Notification Summary</Typography>
+                                        </Paper>
+                                    </Grid>
+                                </Grid>
+                            </>
+                            :
+                            null
+                    }
+                </Grid>
+            </Main>
+            {/* <Grid container sx={{pt:15}}>
+                {
+                    file !== null ?
+                        <>
+                            <Grid item sm={12} md={6} lg={8}>
+                                <Paper sx={{ p: 2, boxShadow: '5px 5px 10px', margin: '10px' }}>
+                                    <>
+                                        <video width="100%" height="363 " ref={videoRef} controls autoPlay>
+                                            <source src={file} type="video/mp4" />
+                                        </video>
+                                    </>
+                                </Paper>
+                            </Grid>
+                            <Grid item sm={12} md={6} lg={4}>
+                                <Paper sx={{ p: 2, boxShadow: '5px 5px 10px', margin: '10px' }}>
+                                    <Notifications />
+                                </Paper>
+                            </Grid>
+                            <Grid container spacing={2} sx={{ p: 2, mt: 1 }}>
+                                <Grid item sm={12} md={6} lg={6}>
+                                    <Paper elevation={3} sx={{ p: 2, boxShadow: '5px 5px 10px', borderRadius: '20px', }}>
+                                        <Box >
+                                            <Typography variant="h5" sx={{ fontWeight: 'bolder' }}>Segmentation Video</Typography>
+                                            <Box sx={{ pt: 2, pl: 1 }}>
+                                                <video width="100%" height="363" controls autoPlay>
+                                                    <source src={video} type="video/mp4" />
+                                                </video>
+                                            </Box>
+                                        </Box>
+                                    </Paper>
+                                </Grid>
+                                <Grid item sm={12} md={6} lg={6} >
+                                    <Paper elevation={3} sx={{ p: 2, boxShadow: '5px 5px 10px', borderRadius: '20px' }}>
+                                        <Box sx={{ borderRadius: '20px' }}>
+                                            <Typography variant="h5" sx={{ fontWeight: 'bold', px: 3, pt: 2 }} >Heat Signature of The Frame</Typography>
+                                            <Box sx={{ textAlign: 'center', pt: 2 }}>
+                                            </Box>
+                                        </Box>
+                                    </Paper>
+                                </Grid>
+                                <Grid item sm={12}>
+                                    <Paper elevation={3} sx={{ p: 2, margin: '10px', boxShadow: '5px 5px 10px' }}>
+                                        <Typography variant="h5" sx={{ fontWeight: 'bolder' }}>Notification Summary</Typography>
+                                    </Paper>
+                                </Grid>
+                            </Grid>
+                        </>
+                        :
+                        null
+                }
+            </Grid> */}
         </Box>
     );
 }
