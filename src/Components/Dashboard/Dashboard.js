@@ -62,12 +62,16 @@ export default function Dashboard() {
     const theme = useTheme();
     const mdBreak = useMediaQuery(theme.breakpoints.up('lg'));
     const [open, setOpen] = React.useState(false);
+    const [show, setShow] = useState('none')
     const [file, setFile] = useState(null)
+    const [imageData, setImageData] = useState({
+        ImageData: null,
+    })
 
-    const [videoAnalysis, setVideoAnalysis] = useState('none')
 
     const videoRef = useRef();
-    // const canvasRef = useRef()
+    const canvasRef = useRef();
+
     const handleDrawerOpen = () => {
         setOpen(true)
     }
@@ -84,7 +88,40 @@ export default function Dashboard() {
     useEffect(() => {
         setFile(file)
     }, [file])
-    console.log(file)
+
+    const capture = () => {
+        const v = videoRef.current;
+        canvasRef.current.width = videoRef.current.videoWidth;
+        canvasRef.current.height = videoRef.current.videoHeight;
+        canvasRef.current
+            .getContext("2d")
+            .drawImage(
+                videoRef.current,
+                0,
+                0,
+                videoRef.current.videoWidth,
+                videoRef.current.videoHeight
+            );
+        const newCanvas = document.createElement("canvas");
+        const newCtx = newCanvas.getContext("2d");
+        newCtx.drawImage(
+            videoRef.current,
+            0,
+            0,
+            videoRef.current.videoWidth,
+            videoRef.current.videoHeight
+        );
+        let imageData = newCtx.getImageData(
+            0,
+            0,
+            newCanvas.width,
+            newCanvas.height
+        );
+        setImageData({
+            ...imageData,
+            ImageData: imageData.data
+        });
+    };
 
     return (
         <Box sx={{ display: "flex" }}>
@@ -103,15 +140,15 @@ export default function Dashboard() {
                     <Typography variant="h5" noWrap sx={{ fontWeight: 'bolder', pt: 1, px: 3 }} component="div">
                         {mdBreak ? 'Flame Analytics Dashboard' : null}
                     </Typography>
-                    <div style={{ marginLeft: 'auto' }}>
+                    <div style={{ marginLeft: 'auto', display: 'flex' }}>
                         <Button variant="contained" component="label" size="medium" sx={{ px: 3, mx: 1 }}>
                             Upload File
                             <input type="file" hidden accept="video/*,.mkv" onChange={handleChange} />
                         </Button>
                         {
                             file !== null ?
-                                <Button variant="contained" size="medium" sx={{ px: 3, mx: 1 }}>
-                                    <Modall />
+                                <Button variant="contained" size="small" sx={{ px: 3, mx: 1 }}>
+                                    <Modall title='Analyse Frame' ImageData={imageData} />
                                 </Button>
                                 :
                                 null
@@ -202,11 +239,9 @@ export default function Dashboard() {
                             <>
                                 <Grid item sm={12} md={6} lg={8}>
                                     <Paper sx={{ p: 2, boxShadow: '5px 5px 10px', margin: '10px' }}>
-                                        <>
-                                            <video width="100%" height="363 " ref={videoRef} onEnded={() => setVideoAnalysis('flex')} controls autoPlay>
-                                                <source src={file} type="video/mp4" />
-                                            </video>
-                                        </>
+                                        <video width="100%" height="363 " ref={videoRef} onPause={capture} onEnded={() => setShow('flex')} controls autoPlay>
+                                            <source src={file} type="video/mp4" />
+                                        </video>
                                     </Paper>
                                 </Grid>
                                 <Grid item sm={12} md={6} lg={4}>
@@ -214,13 +249,13 @@ export default function Dashboard() {
                                         <Notifications />
                                     </Paper>
                                 </Grid>
-                                <Grid container spacing={2} sx={{ p: 2, mt: 1, display: `${videoAnalysis}` }}>
+                                <Grid container spacing={2} sx={{ p: 2, mt: 1, display: `${show}` }}>
                                     <Grid item sm={12} md={6} lg={6}>
                                         <Paper elevation={3} sx={{ p: 2, boxShadow: '5px 5px 10px', borderRadius: '20px', }}>
                                             <Box >
                                                 <Typography variant="h5" sx={{ fontWeight: 'bolder' }}>Segmentation Video</Typography>
                                                 <Box sx={{ pt: 2, pl: 1 }}>
-                                                    <video width="100%" height="363"  controls autoPlay>
+                                                    <video width="100%" height="363" controls autoPlay>
                                                         <source src={video} type="video/mp4" />
                                                     </video>
                                                 </Box>
@@ -230,20 +265,36 @@ export default function Dashboard() {
                                     <Grid item sm={12} md={6} lg={6} >
                                         <Paper elevation={3} sx={{ p: 2, boxShadow: '5px 5px 10px', borderRadius: '20px' }}>
                                             <Box sx={{ borderRadius: '20px' }}>
-                                                <Typography variant="h5" sx={{ fontWeight: 'bold', px: 3, pt: 2 }} >Heat Signature of The Frame</Typography>
+                                                <Typography variant="h5" sx={{ fontWeight: 'bolder' }} >Heat Signature of The Frame</Typography>
                                                 <Box sx={{ textAlign: 'center', pt: 2 }}>
-                                                    <video width="100%" height="363 "  controls autoPlay>
+                                                    <video width="100%" height="363 " controls autoPlay>
                                                         <source src={file} type="video/mp4" />
                                                     </video>
                                                 </Box>
                                             </Box>
                                         </Paper>
                                     </Grid>
-                                    <Grid item sm={12}>
-                                        <Paper elevation={3} sx={{ p: 2, margin: '10px', boxShadow: '5px 5px 10px' }}>
-                                            <Typography variant="h5" sx={{ fontWeight: 'bolder' }}>Notification Summary</Typography>
+                                    <Grid item sm={12} md={6} lg={6}>
+                                        <Paper elevation={3} sx={{ p: 2, boxShadow: '5px 5px 10px', borderRadius: '20px', }}>
+                                            <Box >
+                                                <Typography variant="h5" sx={{ fontWeight: 'bolder' }}>Notification Summary</Typography>
+                                                <Box sx={{ pt: 2, pl: 1 }}>
+                                                   
+                                                </Box>
+                                            </Box>
                                         </Paper>
                                     </Grid>
+                                    <Grid item sm={12} md={6} lg={6} >
+                                        <Paper elevation={3} sx={{ p: 2, boxShadow: '5px 5px 10px', borderRadius: '20px' }}>
+                                            <Box sx={{ borderRadius: '20px' }}>
+                                                <Typography variant="h5" sx={{ fontWeight: 'bolder' }} >Prediction Curve</Typography>
+                                                <Box sx={{ textAlign: 'center', pt: 2 }}>
+                                                </Box>
+                                            </Box>
+                                        </Paper>
+                                    </Grid>
+
+
                                 </Grid>
                             </>
                             :

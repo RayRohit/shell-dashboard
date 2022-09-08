@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import List from '@mui/material/List';
 import { Alert, Paper, Typography } from '@mui/material';
 import { Box } from '@mui/system';
+import Modall from './Modal/Modal';
 
 export default function Notifications() {
     const [data, setData] = useState([])
@@ -11,6 +12,36 @@ export default function Notifications() {
             .then((data) => setData(data))
     }, [])
     const sortedPosts = data.sort((a, b) => { return (b.id - a.id) })
+
+    const obj = [
+        {
+            title: 'Fire',
+            FrameNo: 1,
+            ImagePath: 'Image-1'
+        },
+        {
+            title: 'Non-Fire',
+            FrameNo: 2,
+            ImagePath: 'Image-2'
+        },
+        {
+            title: 'Fire',
+            FrameNo: 3,
+            ImagePath: 'Image-3'
+        },
+        {
+            title: 'Fire',
+            FrameNo: 4,
+            ImagePath: 'Image-4'
+        },
+        {
+            title: 'Non-Fire',
+            FrameNo: 5,
+            ImagePath: 'Image-5'
+        }
+    ]
+
+
     return (
         <>
             <Paper elevation={3} sx={{ my: 1, display: 'flex' }}>
@@ -24,58 +55,21 @@ export default function Notifications() {
                     position: 'relative',
                     overflow: 'auto',
                     maxHeight: 290,
+                    cursor:'pointer',
                     '& ul': { padding: 0 },
                 }}
                 subheader={<li />}
             >
                 <Box>
                     {
-                        sortedPosts.map((item) => {
+                        obj.map((item) => {
                             return (
-                                <Alert color='error' sx={{ my: 2 }}>
-                                    <Typography variant='h6'>{item.id}</Typography>
-                                    <Typography variant='h6'>{item.status}</Typography>
-                                </Alert>
+                                <>
+                                    <Modall title={item.title} ImageData={item} />
+                                </>
                             )
                         })
                     }
-                    {/* <Alert severity="success" color="error" sx={{ my: 2 }} >
-                        This is a success alert — check it out!
-                    </Alert> */}
-                    {/* <Alert severity="success" color="success" sx={{ my: 2 }} >
-                        This is a success alert — check it out!
-                    </Alert>
-                    <Alert severity="success" color="warning" sx={{ my: 2 }} >
-                        This is a success alert — check it out!
-                    </Alert>
-                    <Alert severity="success" color="info" sx={{ my: 2 }} >
-                        This is a success alert — check it out!
-                    </Alert>
-                    <Alert severity="success" color="info" sx={{ my: 2 }} >
-                        This is a success alert — check it out!
-                    </Alert>
-                    <Alert severity="success" color="info" sx={{ my: 2 }} >
-                        This is a success alert — check it out!
-                    </Alert>
-                    <Alert severity="success" color="info" sx={{ my: 2 }} >
-                        This is a success alert — check it out!
-                    </Alert>
-                    <Alert severity="success" color="info" sx={{ my: 2 }} >
-                        This is a success alert — check it out!
-                    </Alert>
-                    <Alert severity="success" color="info" sx={{ my: 2 }} >
-                        This is a success alert — check it out!
-                    </Alert>
-                    <Alert severity="success" color="info" sx={{ my: 2 }} >
-                        This is a success alert — check it out!
-                    </Alert>
-                    <Alert severity="success" color="info" sx={{ my: 2 }} >
-                        This is a success alert — check it out!
-                    </Alert>
-                    <Alert severity="success" color="info" sx={{ my: 2 }} >
-                        This is a success alert — check it out!
-                    </Alert> */}
-
                 </Box>
             </List>
         </>

@@ -1,4 +1,4 @@
-import { Grid, Paper, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Alert, Button, Grid, Paper, Typography, useMediaQuery, useTheme } from "@mui/material";
 import React from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
@@ -24,8 +24,9 @@ export const style = {
     overflow: 'auto',
 
 };
-export default function Modall() {
+export default function Modall(props) {
     const [open, setOpen] = React.useState(false);
+
     const handleOpen = () => setOpen(true);
 
     const theme = useTheme()
@@ -62,13 +63,22 @@ export default function Modall() {
             Math.ceil(Math.random() * i * 10)
 
         );
-
+            
     return (
         <div>
             <div>
-                <Typography variant="p" onClick={handleOpen} >
-                    Analyse Frame
-                </Typography>
+                {
+                    props.title === 'Analyse Frame' ?
+                        <>
+                            <Typography variant='h6' onClick={() => handleOpen()} sx={{fontSize:'14px'}}>{props.title}</Typography>
+                        </>
+                        :
+                        <>
+                            <Alert color='error' sx={{ my: 2 }} onClick={() => handleOpen()}>
+                                <Typography variant='h6' sx={{ fontSize: '12px' }}>{props.title}</Typography>
+                            </Alert>
+                        </>
+                }
             </div>
             <Modal
                 open={open}
